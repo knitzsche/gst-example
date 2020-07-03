@@ -1,0 +1,36 @@
+name: gst-example
+base: core18
+version: '1'
+summary: gstreamer example
+description: |
+  use gst-launch to play a sound
+
+grade: stable
+confinement: strict
+
+environment:
+   LD_LIBRARY_PATH: ${LD_LIBRARY_PATH}:${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/gstreamer-1.0/
+   GST_PLUGIN_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0
+   GST_PLUGIN_SYSTEM_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0
+   GST_PLUGIN_SCANNER: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner
+apps:
+  play-ogg:
+    command: bin/play-ogg
+    plugs: [ audio-playback ]
+
+  gst-inspect:
+    command: usr/bin/gst-inspect-1.0
+    plugs: [ audio-playback, audio-record ]
+
+  gst-typefind:
+    command: usr/bin/gst-typefind-1.0
+    plugs: [ audio-playback, audio-record ]
+
+parts:
+  gst:
+    plugin: nil
+    stage-packages: [ gstreamer1.0-tools, gstreamer1.0-plugins-base, libgstreamer-plugins-bad1.0-0, gstreamer1.0-pulseaudio ] 
+
+  launchers:
+    source: launchers
+    plugin: dump
